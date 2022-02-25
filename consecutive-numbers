@@ -1,0 +1,21 @@
+-- I came across this problem in leetcode. Please refer https://leetcode.com/problems/consecutive-numbers/
+
+-- I have used tabibitosan method to solve this. Please refer https://livesql.oracle.com/apex/livesql/file/content_F8P1XASWD667NDOFJTM74NYE9.html
+
+with grp as (
+select
+id,
+num,
+id-row_number() over(partition by num order by id) grp_col
+from logs
+order by id)
+
+
+select 
+distinct num as "ConsecutiveNums"
+from(
+select 
+num ,
+count(1) over(partition by num,grp_col) as no_rec
+from grp)
+where no_rec>=3
