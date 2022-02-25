@@ -1,0 +1,29 @@
+--I came across this question in leet code database problems. Please refer https://leetcode.com/problems/human-traffic-of-stadium/
+
+--In this method, I have used Tabibitosan method for solving it. Please refer https://livesql.oracle.com/apex/livesql/file/content_F8P1XASWD667NDOFJTM74NYE9.html
+
+with grps as (
+select
+id,
+to_char(visit_date,'yyyy-mm-dd') visit_date,
+people,
+row_number() over( order by visit_date ) rn,
+id-row_number() over(order by visit_date) grp_col
+from
+stadium
+where people>=100)
+
+
+select
+id as "id",
+visit_date as "visit_date",
+people as "people"
+from(
+select 
+id,
+visit_date,
+people,
+count(1) over( partition by grp_col ) no_rec
+from grps)
+where no_rec>=3
+order by visit_date
