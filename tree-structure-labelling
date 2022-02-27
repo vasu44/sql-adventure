@@ -17,7 +17,8 @@ select
     parent,
     case when parent is null then 'Root'
     when connect_by_isleaf=1 then 'Leaf'
-    else 'Inner' end label
+    else 'Inner' end label,
+    sys_connect_by_path(node,'->') chart ----This column will show you the rows between root and current node
 from tree
 start with parent is null
 connect by prior node=parent;
