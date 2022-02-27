@@ -1,0 +1,23 @@
+--I came across this question from https://quip.com/2gwZArKuWk7W. 
+
+--I have used hierarchical  queries from oracle to solve this. https://livesql.oracle.com/apex/livesql/file/tutorial_GQMLEEPG5ARVSIFGQRD3SES92.html
+
+--Given a tree structure, we need to find the root node, leaf and Inner node.
+
+| node |  parent |
+| 1    |   2     | 
+| 2    |   5     |
+| 3    |   5     |
+| 4    |   3     | 
+| 5    |   NULL  | 
+
+
+select
+    node,
+    parent,
+    case when parent is null then 'Root'
+    when connect_by_isleaf=1 then 'Leaf'
+    else 'Inner' end label
+from tree
+start with parent is null
+connect by prior node=parent;
